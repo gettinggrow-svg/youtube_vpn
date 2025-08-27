@@ -1,0 +1,31 @@
+name: Flutter CI
+
+on:
+  push:
+    branches: [ "main" ]   # запуск при каждом коммите в main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Скачать код
+        uses: actions/checkout@v4
+
+      - name: Установить Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.16.0'   # версия Flutter
+
+      - name: Установить зависимости
+        run: flutter pub get
+
+      - name: Собрать APK
+        run: flutter build apk --release
+
+      - name: Сохранить APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-release
+          path: build/app/outputs/flutter-apk/app-release.apk
+          retention-days: 7   # хранить файл 7 дней
